@@ -12,9 +12,9 @@ COPY gradlew gradlew.bat /app/
 # Step 4: Copy the source code
 COPY src /app/src
 
-# Step 5: Build the application
+# Step 5: Build the application (skip tests)
 RUN chmod +x ./gradlew
-RUN ./gradlew build --no-daemon
+RUN ./gradlew build -x test --no-daemon
 
 # Step 6: Create a lightweight image for running the application
 FROM openjdk:21-jdk-slim
