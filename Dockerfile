@@ -1,34 +1,11 @@
-# Java 21을 포함한 이미지 사용
-FROM eclipse-temurin:21-jdk
+# Step 1: Use OpenJDK 21 base image
+FROM openjdk:21-jdk-slim
 
-# JAVA_HOME 환경변수 설정
-ENV JAVA_HOME=/opt/java/openjdk
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
-# Gradle과 필요한 도구 설치
-RUN apt-get update && apt-get install -y gradle
-
-# 작업 디렉토리 설정
+# Step 2: Set the working directory inside the container
 WORKDIR /app
 
-# Gradle wrapper와 필요한 파일들을 복사
-COPY gradlew /app/gradlew
-COPY gradle /app/gradle
-COPY build.gradle /app/build.gradle
-COPY settings.gradle /app/settings.gradle
-COPY src /app/src
+# Step 3: Copy the JAR file from your local machine to the container
+COPY build/libs/interior-0.0.1-SNAPSHOT.jar /app/
 
-# 권한 설정 (Windows에서 복사한 경우 실행 권한이 없을 수 있음)
-RUN chmod +x /app/gradlew
-
-# Gradle 빌드
-RUN ./gradlew build
-
-# 빌드된 JAR 파일을 복사
-COPY build/libs/interior-0.0.1-SNAPSHOT.jar app.jar
-
-# 컨테이너에서 열어둘 포트
-EXPOSE 10000
-
-# JAR 파일 실행 명령
-CMD ["java", "-jar", "app.jar"]
+# Step 4: Run the JAR file when the container starts
+CMD ["java", "-jar", "-Dserver.port=10000", "interior-0.0.1-SNAPSHOT.jar"]
