@@ -5,6 +5,9 @@ FROM eclipse-temurin:21-jdk
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
+# Gradle과 필요한 도구 설치
+RUN apt-get update && apt-get install -y gradle
+
 # 작업 디렉토리 설정
 WORKDIR /app
 
