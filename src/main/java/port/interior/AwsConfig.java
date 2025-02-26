@@ -9,6 +9,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+@Configuration
 public class AwsConfig {
     @Value("${aws.s3.region}")
     private String region;
@@ -19,6 +20,7 @@ public class AwsConfig {
     @Value("${aws.credentials.secret-key}")
     private String secretKey;
 
+    @Bean
     public S3Client s3Client() {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
         return S3Client.builder()
