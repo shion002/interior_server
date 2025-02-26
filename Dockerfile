@@ -1,11 +1,15 @@
-# Step 1: Use OpenJDK 21 base image
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk
 
-# Step 2: Set the working directory inside the container
+# JAVA_HOME을 설정
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
 WORKDIR /app
 
-# Step 3: Copy the JAR file from your local machine to the container
-COPY build/libs/interior-0.0.1-SNAPSHOT.jar /app/
+# 빌드된 JAR 파일 복사
+COPY build/libs/interior-0.0.1-SNAPSHOT.jar app.jar
 
-# Step 4: Run the JAR file when the container starts
-CMD ["java", "-jar", "-Dserver.port=10000", "interior-0.0.1-SNAPSHOT.jar"]
+EXPOSE 10000
+
+# JAR 파일 실행
+CMD ["java", "-jar", "app.jar"]
