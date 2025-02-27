@@ -36,8 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-# Spring Boot
-application.yml
-
 # React 환경 변수
 .env
