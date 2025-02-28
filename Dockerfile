@@ -22,7 +22,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Step 7: Copy the JAR from the build stage
-COPY --from=build /app/build/libs/interior-0.0.1-SNAPSHOT.jar /app/
+COPY --from=build /app/build/libs/interior-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Step 8: Run the JAR when the container starts
 CMD ["java", "-jar", "-Dserver.port=10000", "interior-0.0.1-SNAPSHOT.jar"]
