@@ -16,25 +16,12 @@ COPY src /app/src
 RUN chmod +x ./gradlew
 RUN ./gradlew build -x test --no-daemon
 
-# Step 6: Create a lightweight image for running the application
 FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-# Step 7: Copy the JAR from the build stage
-COPY --from=build /app/build/libs/interior-0.0.1-SNAPSHOT.jar /app/app.jar
+# Copy the JAR from the build stage
+COPY app.jar /app/app.jar
 
-# Step 8: Run the JAR when the container starts
-CMD ["java", "-jar", "-Dserver.port=10000", "interior-0.0.1-SNAPSHOT.jar"]
-
-ENTRYPOINT ["sh", "-c", "
-  echo 'DATABASE_URL: ' $DATABASE_URL
-  export DB_URL=$(echo $DATABASE_URL | sed -E 's|^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.+)$|jdbc:postgresql://\\3:\\4/\\5|')
-  echo 'DB_URL: ' $DB_URL
-  export DB_USERNAME=$(echo $DATABASE_URL | sed -E 's|^postgres://([^:]+):.*$|\\1|')
-  echo 'DB_USERNAME: ' $DB_USERNAME
-  export DB_PASSWORD=$(echo $DATABASE_URL | sed -E 's|^postgres://[^:]+:([^@]+)@.*$|\\1|')
-  echo 'DB_PASSWORD: ' $DB_PASSWORD
-  export DB_CLASS_NAME=org.postgresql.Driver
-  exec java -jar app.jar
-"]
+# Run the JAR directly
+CMD ["java", "-jar", "app.jar"]
