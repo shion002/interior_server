@@ -21,7 +21,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the JAR from the build stage
-COPY app.jar /app/app.jar
+COPY --from=build /app/build/libs/*.jar /app/app.jar
 
 # Run the JAR directly
 CMD ["java", "-jar", "app.jar"]
