@@ -26,3 +26,6 @@ COPY --from=build /app/build/libs/interior-0.0.1-SNAPSHOT.jar /app/
 
 # Step 8: Run the JAR when the container starts
 CMD ["java", "-jar", "-Dserver.port=10000", "interior-0.0.1-SNAPSHOT.jar"]
+
+# DATABASE_URL을 JDBC URL로 변환
+ENTRYPOINT ["sh", "-c", "export JDBC_DATABASE_URL=$(echo $DATABASE_URL | sed -E 's|^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.+)$|jdbc:postgresql://\\3:\\4/\\5?user=\\1&password=\\2|') && exec java -jar app.jar"]
