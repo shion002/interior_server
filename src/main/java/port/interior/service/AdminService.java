@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import port.interior.dto.LoginDto;
 import port.interior.dto.AdminResponseDto;
 import port.interior.entity.Admin;
-import port.interior.entity.SaveDto;
 import port.interior.repository.AdminRepository;
 import port.interior.util.SecurityUtil;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
