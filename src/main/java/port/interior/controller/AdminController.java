@@ -29,12 +29,6 @@ public class AdminController {
     private final AdminService adminService;
     private final JwtService jwtService;
 
-    @PostMapping("/save")
-    public String save(@RequestBody Admin admin){
-        adminService.save(admin);
-        return "success";
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
         AdminResponseDto loginMember = adminService.login(loginDto);

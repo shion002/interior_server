@@ -27,11 +27,6 @@ public class AdminService {
                 .map(admin -> new AdminResponseDto(admin.getId(), admin.getUsername()))
                 .orElse(null);
     }
-
-    public void save(Admin admin){
-        adminRepository.save(admin);
-    }
-
     public Admin currentAdmin(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("🛑 현재 인증된 사용자: {}", authentication.getName());
