@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import port.interior.dto.LoginDto;
 import port.interior.dto.AdminResponseDto;
 import port.interior.entity.Admin;
+import port.interior.entity.SaveDto;
 import port.interior.repository.AdminRepository;
 import port.interior.util.SecurityUtil;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,10 @@ public class AdminService {
                 .filter(admin -> admin.getPassword().equals(loginDto.getPassword()))
                 .map(admin -> new AdminResponseDto(admin.getId(), admin.getUsername()))
                 .orElse(null);
+    }
+
+    public void save(Admin admin){
+        adminRepository.save(admin);
     }
 
     public Admin currentAdmin(){

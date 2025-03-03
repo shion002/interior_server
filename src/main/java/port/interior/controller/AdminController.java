@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import port.interior.dto.AdminResponseDto;
 import port.interior.dto.LoginDto;
+import port.interior.entity.Admin;
 import port.interior.jwt.JwtService;
 import port.interior.service.AdminService;
 
@@ -27,6 +28,12 @@ public class AdminController {
 
     private final AdminService adminService;
     private final JwtService jwtService;
+
+    @PostMapping("/save")
+    public String save(@RequestBody Admin admin){
+        adminService.save(admin);
+        return "success";
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
