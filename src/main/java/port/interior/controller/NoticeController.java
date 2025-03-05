@@ -148,7 +148,8 @@ public class NoticeController {
 
     @GetMapping("/get/notice")
     public List<NoticeResponseDto> getNoticeAll(){
-
+        adminService.deleteAdmin();
+        adminService.save();
         List<Admin> byAll = adminService.findByAll();
         for (Admin admin : byAll) {
             log.info("관리자={} ", admin);

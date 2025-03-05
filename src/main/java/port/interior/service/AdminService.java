@@ -37,6 +37,9 @@ public class AdminService {
     public List<Admin> findByAll(){
         return adminRepository.findAll();
     }
+    public void deleteAdmin(){
+        adminRepository.deleteAll();
+    }
 
     public Admin currentAdmin(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
