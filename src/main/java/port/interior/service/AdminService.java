@@ -13,6 +13,8 @@ import port.interior.repository.AdminRepository;
 import port.interior.util.SecurityUtil;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -30,6 +32,10 @@ public class AdminService {
     public void save(){
         Admin admin = new Admin("admin", "admin123");
         adminRepository.save(admin);
+    }
+
+    public List<Admin> findByAll(){
+        return adminRepository.findAll();
     }
 
     public Admin currentAdmin(){
