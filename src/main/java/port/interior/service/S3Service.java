@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.UUID;
 
 @Service
@@ -50,6 +51,7 @@ public class S3Service {
                 .bucket(bucketName)
                 .key(objectKey)
                 .acl(ObjectCannedACL.PUBLIC_READ)
+                .metadata(Collections.singletonMap("x-amz-acl", "public-read"))
                 .build();
 
         log.info("putObjRequest={}", putObjectRequest);
