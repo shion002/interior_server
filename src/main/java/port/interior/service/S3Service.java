@@ -46,10 +46,14 @@ public class S3Service {
 
         String objectKey = "interior/posts/" + postId + "/" + fileName;
 
+        // Determine content type based on file extension
+        String contentType = determineContentType(fileName);
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
                 .acl(ObjectCannedACL.PUBLIC_READ)
+                .contentType(contentType)
                 .build();
 
         log.info("putObjRequest={}", putObjectRequest);
@@ -59,6 +63,16 @@ public class S3Service {
                 .putObjectRequest(putObjectRequest));
 
         return presignedRequest.url().toString(); // 업로드 URL 반환
+    }
+
+    private String determineContentType(String fileName) {
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        return switch (extension) {
+            case "jpg", "jpeg" -> "image/jpeg";
+            case "png" -> "image/png";
+            case "gif" -> "image/gif";
+            default -> "application/octet-stream";
+        };
     }
 
     public void deleteFile(String fileUrl) {
