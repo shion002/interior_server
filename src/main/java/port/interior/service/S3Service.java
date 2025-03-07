@@ -70,6 +70,7 @@ public class S3Service {
         log.info("Generated presigned URL: {}", presignedRequest.url().toString());
 
         String presignedUrl = presignedRequest.url().toString();
+        presignedUrl = presignedUrl.replace("&amp;", "&");
         log.info("Generated presigned URL: {}", presignedUrl);
 
         return presignedUrl;
