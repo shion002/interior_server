@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
@@ -42,6 +43,7 @@ public class S3Service {
         return S3Presigner.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
+                .endpointOverride(URI.create("https://s3." + region + ".amazonaws.com"))
                 .build();
     }
 
