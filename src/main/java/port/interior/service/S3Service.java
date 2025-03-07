@@ -55,11 +55,6 @@ public class S3Service {
         // Determine content type based on file extension
         String contentType = determineContentType(fileName);
 
-        log.info("AWS Access Key: {}", accessKey);
-        log.info("AWS Secret Key: {}", secretKey);
-        log.info("AWS Region: {}", region);
-        log.info("AWS Bucket Name: {}", bucketName);
-
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
@@ -70,6 +65,9 @@ public class S3Service {
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(r -> r
                 .signatureDuration(Duration.ofMinutes(10))
                 .putObjectRequest(putObjectRequest));
+
+        log.info("Canonical Request: {}", presignedRequest.toBuilder().toString());
+        log.info("Generated presigned URL: {}", presignedRequest.url().toString());
 
         String presignedUrl = presignedRequest.url().toString();
         log.info("Generated presigned URL: {}", presignedUrl);
