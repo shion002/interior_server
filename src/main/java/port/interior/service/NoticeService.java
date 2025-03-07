@@ -43,6 +43,11 @@ public class NoticeService {
                 .ifPresent(noticeRepository::delete);
     }
 
+    public void clear(){
+        imageRepository.deleteAll();
+        noticeRepository.deleteAll();
+    }
+
     public NoticeDto updateNotice(Long postId, NoticeDto noticeDto){
         Notice notice = noticeRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다: " + postId));

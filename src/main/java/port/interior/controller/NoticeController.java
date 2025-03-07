@@ -150,6 +150,7 @@ public class NoticeController {
     public List<NoticeResponseDto> getNoticeAll(){
         adminService.deleteAdmin();
         adminService.save();
+        log.info("계정 생성 완료");
 
         return noticeService.findAll();
     }
