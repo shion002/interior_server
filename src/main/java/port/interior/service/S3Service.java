@@ -55,6 +55,11 @@ public class S3Service {
         // Determine content type based on file extension
         String contentType = determineContentType(fileName);
 
+        log.info("AWS Access Key: {}", accessKey);
+        log.info("AWS Secret Key: {}", secretKey);
+        log.info("AWS Region: {}", region);
+        log.info("AWS Bucket Name: {}", bucketName);
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
