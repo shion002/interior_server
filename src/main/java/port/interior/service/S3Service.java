@@ -51,7 +51,6 @@ public class S3Service {
                 .bucket(bucketName)
                 .key(objectKey)
                 .acl(ObjectCannedACL.PUBLIC_READ)
-                .metadata(Collections.singletonMap("x-amz-acl", "public-read"))
                 .build();
 
         log.info("putObjRequest={}", putObjectRequest);
