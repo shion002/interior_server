@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -54,6 +55,8 @@ public class S3Service {
                 .build();
 
         log.info("putObjRequest={}", putObjectRequest);
+        Instant now = Instant.now();
+        log.info("Current UTC time: {}", now);
 
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(r -> r
                 .signatureDuration(Duration.ofMinutes(10))
