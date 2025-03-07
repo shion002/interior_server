@@ -50,25 +50,15 @@ public class S3Service {
 
         String objectKey = "interior/posts/" + postId + "/" + fileName;
 
-        // Add explicit metadata and content-type headers
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("original-filename", fileName);
-
         // Determine content type based on file extension
         String contentType = determineContentType(fileName);
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
-                .contentType(contentType) // Set proper content type
-                .metadata(metadata)
+                .contentType(contentType)
+                .acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
-
-        log.info("Generating presigned URL with: bucket={}, key={}, contentType={}",
-                bucketName, objectKey, contentType);
-
-        Instant now = Instant.now();
-        log.info("Current UTC time: {}", now);
 
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(r -> r
                 .signatureDuration(Duration.ofMinutes(10))
