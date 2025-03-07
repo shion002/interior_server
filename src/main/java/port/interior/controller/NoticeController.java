@@ -148,6 +148,9 @@ public class NoticeController {
 
     @GetMapping("/get/notice")
     public List<NoticeResponseDto> getNoticeAll(){
+        adminService.deleteAdmin();
+        adminService.save();
+
         return noticeService.findAll();
     }
 }
