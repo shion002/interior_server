@@ -15,6 +15,8 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequ
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -48,12 +50,23 @@ public class S3Service {
 
         String objectKey = "interior/posts/" + postId + "/" + fileName;
 
+        // Add explicit metadata and content-type headers
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("original-filename", fileName);
+
+        // Determine content type based on file extension
+        String contentType = determineContentType(fileName);
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
+                .contentType(contentType) // Set proper content type
+                .metadata(metadata)
                 .build();
 
-        log.info("putObjRequest={}", putObjectRequest);
+        log.info("Generating presigned URL with: bucket={}, key={}, contentType={}",
+                bucketName, objectKey, contentType);
+
         Instant now = Instant.now();
         log.info("Current UTC time: {}", now);
 
@@ -61,7 +74,25 @@ public class S3Service {
                 .signatureDuration(Duration.ofMinutes(10))
                 .putObjectRequest(putObjectRequest));
 
-        return presignedRequest.url().toString(); // 업로드 URL 반환
+        String presignedUrl = presignedRequest.url().toString();
+        log.info("Generated presigned URL: {}", presignedUrl);
+
+        return presignedUrl;
+    }
+
+    private String determineContentType(String fileName) {
+        fileName = fileName.toLowerCase();
+        if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (fileName.endsWith(".png")) {
+            return "image/png";
+        } else if (fileName.endsWith(".gif")) {
+            return "image/gif";
+        } else if (fileName.endsWith(".pdf")) {
+            return "application/pdf";
+        } else {
+            return "application/octet-stream"; // Default binary type
+        }
     }
 
 
