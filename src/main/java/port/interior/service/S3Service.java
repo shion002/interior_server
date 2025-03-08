@@ -52,7 +52,6 @@ public class S3Service {
 
         String objectKey = "interior/posts/" + postId + "/" + fileName;
 
-        // Determine content type based on file extension
         String contentType = determineContentType(fileName);
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -64,15 +63,15 @@ public class S3Service {
 
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(r -> r
                 .signatureDuration(Duration.ofMinutes(10))
-                .putObjectRequest(putObjectRequest));
+                .putObjectRequest(putObjectRequest)
+        );
 
         log.info("Canonical Request: {}", presignedRequest.toBuilder().toString());
-        log.info("Generated presigned URL: {}", presignedRequest.url().toString());
 
         String presignedUrl = presignedRequest.url().toString();
-        presignedUrl = presignedUrl.replace("&amp;", "&");
-        log.info("Generated presigned URL: {}", presignedUrl);
+        presignedUrl += "&x-amz-content-sha256=UNSIGNED-PAYLOAD";
 
+        log.info("Generated presigned URL: {}", presignedUrl);
         return presignedUrl;
     }
 
