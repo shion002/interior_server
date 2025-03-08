@@ -62,7 +62,7 @@ public class S3Service {
                 .build();
 
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(r -> r
-                .signatureDuration(Duration.ofMinutes(10))
+                .signatureDuration(Duration.ofMinutes(60))
                 .putObjectRequest(putObjectRequest)
         );
 
