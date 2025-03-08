@@ -69,7 +69,6 @@ public class S3Service {
         log.info("Canonical Request: {}", presignedRequest.toBuilder().toString());
 
         String presignedUrl = presignedRequest.url().toString();
-        presignedUrl += "&x-amz-content-sha256=UNSIGNED-PAYLOAD";
 
         log.info("Generated presigned URL: {}", presignedUrl);
         return presignedUrl;
