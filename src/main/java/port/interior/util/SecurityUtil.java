@@ -26,7 +26,7 @@ public class SecurityUtil {
 
         if (usernameOpt.isPresent()) {
             Optional<Admin> admin = adminRepository.findByUsername(usernameOpt.get());
-            log.info("🔍 DB에서 찾은 관리자: {}", admin.orElse(null));
+            log.info("DB에서 찾은 관리자: {}", admin.orElse(null));
             return admin;
         }
 

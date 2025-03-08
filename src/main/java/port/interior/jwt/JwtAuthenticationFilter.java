@@ -44,14 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtService.validateToken(token)) {
-                log.info("✅ JWT 유효성 검증 성공: {}", username);
+                log.info("JWT 유효성 검증 성공: {}", username);
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
             else{
-                log.warn("❌ JWT 유효성 검증 실패");
+                log.warn("JWT 유효성 검증 실패");
             }
         }
         chain.doFilter(request, response);

@@ -43,9 +43,9 @@ public class AdminService {
 
     public Admin currentAdmin(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("🛑 현재 인증된 사용자: {}", authentication.getName());
+        log.info("현재 인증된 사용자: {}", authentication.getName());
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getName().equals("anonymousUser")) {
+        if (!authentication.isAuthenticated() || authentication.getName().equals("anonymousUser")) {
             throw new IllegalStateException("인증되지 않은 사용자입니다.");
         }
         return SecurityUtil.getCurrentAdmin(adminRepository)

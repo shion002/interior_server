@@ -17,7 +17,7 @@ public class NoticeDto {
     private Long id;
     private String title;
     private String content;
-    private List<ImageDto> images;  // ✅ 기존 List<Image> → List<ImageDto> 변경
+    private List<ImageDto> images;
     private Long adminId;
 
     public Notice toEntity(Admin admin){
@@ -46,7 +46,7 @@ public class NoticeDto {
     public static NoticeDto fromEntity(Notice notice){
         List<ImageDto> imageDtos = notice.getImage().stream()
                 .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
-                .toList();  // ✅ Image → ImageDto 변환
+                .toList();
 
         return new NoticeDto(notice.getId(), notice.getTitle(), notice.getContent(), imageDtos, notice.getAdmin().getId());
     }

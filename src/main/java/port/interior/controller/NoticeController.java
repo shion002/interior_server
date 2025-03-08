@@ -70,20 +70,16 @@ public class NoticeController {
         log.info("게시물 삭제 요청: postId={}", postId);
 
         try {
-            // ✅ 1. 게시물에 포함된 이미지 URL 목록 가져오기
             List<String> imageUrls = noticeService.getImageUrlsByPostId(postId);
 
             log.info("삭제할 이미지 목록: {}", imageUrls);
 
-            // ✅ 2. S3에서 이미지 삭제
             for (String imageUrl : imageUrls) {
                 s3Service.deleteFile(imageUrl);
             }
 
-            // ✅ 3. DB에서 이미지 삭제
             noticeService.deleteImages(postId, imageUrls);
 
-            // ✅ 4. 게시물 삭제
             noticeService.deleteNotice(postId);
 
             return ResponseEntity.ok().body("게시물이 삭제되었습니다.");

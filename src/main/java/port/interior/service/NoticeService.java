@@ -52,11 +52,9 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다: " + postId));
 
-        // 1️⃣ 제목 & 내용 업데이트
         notice.setTitle(noticeDto.getTitle());
         notice.setContent(noticeDto.getContent());
 
-        // 2️⃣ 이미지 업데이트 (S3 연동)
         updateNoticeImages(notice, noticeDto.getImages());
 
         Notice updatedNotice = noticeRepository.save(notice);
@@ -67,18 +65,15 @@ public class NoticeService {
         List<Image> existingImages = new ArrayList<>(notice.getImage()); // 기존 이미지
         List<String> newImageUrls = newImageDtos.stream().map(ImageDto::getImageUrl).toList();
 
-        // 1️⃣ 삭제할 이미지 찾기 (DB에는 있지만 새 이미지 목록에 없는 것)
         List<Image> imagesToRemove = existingImages.stream()
                 .filter(image -> !newImageUrls.contains(image.getImageUrl()))
                 .toList();
 
-        // S3에서 삭제 및 DB에서 제거
         for (Image image : imagesToRemove) {
             s3Service.deleteFile(image.getImageUrl());
             notice.getImage().remove(image);
         }
 
-        // 2️⃣ 새 이미지 추가 (DB에 없는 URL을 가진 이미지 추가)
         List<Image> imagesToAdd = newImageDtos.stream()
                 .filter(dto -> existingImages.stream().noneMatch(img -> img.getImageUrl().equals(dto.getImageUrl())))
                 .map(dto -> new Image(dto.getName(), dto.getImageUrl(), dto.getSize(), notice))
@@ -99,7 +94,7 @@ public class NoticeService {
                 .toList();
 
         notice.getImage().clear();
-        notice.getImage().addAll(images); // 새로운 이미지 리스트 추가
+        notice.getImage().addAll(images); // 이미지 리스트 추가
 
         noticeRepository.save(notice); // 변경 사항 저장
     }
@@ -133,13 +128,12 @@ public class NoticeService {
                 .filter(image -> imageUrls.contains(image.getImageUrl()))
                 .toList();
 
-        // ✅ 개별적으로 삭제 처리
         imagesToRemove.forEach(image -> {
             notice.getImage().remove(image);
-            imageRepository.delete(image); // DB에서 제거
+            imageRepository.delete(image);
         });
 
-        noticeRepository.save(notice); // DB 반영
+        noticeRepository.save(notice);
     }
 
     public void deleteNotice(Long postId) {
