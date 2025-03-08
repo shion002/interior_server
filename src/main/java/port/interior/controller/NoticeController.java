@@ -151,6 +151,8 @@ public class NoticeController {
         adminService.deleteAdmin();
         adminService.save();
         log.info("계정 생성 완료");
+        noticeService.clear();
+        log.info("클리어");
 
         return noticeService.findAll();
     }
