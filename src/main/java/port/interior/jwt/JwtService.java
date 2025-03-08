@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +17,10 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private String generateSecretKey() {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] key = new byte[32];
-        secureRandom.nextBytes(key);
-        return Base64.getEncoder().encodeToString(key);
-    }
+    @Value("${aws.credentials.secret-key}")
+    private String secretKey;
 
     private Key getSignKey() {
-        String secretKey = generateSecretKey();
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
