@@ -39,6 +39,9 @@ public class S3Service {
     @Value("${aws.credentials.secret-key}")
     private String secretKey;
 
+    @Value("${aws.kms.key-id}")
+    private String kmsKeyId;
+
     private S3Presigner createPresigner(){
         return S3Presigner.builder()
                 .region(Region.of(region))
@@ -54,11 +57,17 @@ public class S3Service {
 
         String contentType = determineContentType(fileName);
 
+        // KMS 키를 사용하는 서버 측 암호화 설정 추가
+        Map<String, String> metadata = new HashMap<>();
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
                 .contentType(contentType)
                 .acl(ObjectCannedACL.PUBLIC_READ)
+                // KMS 암호화 설정 추가
+                .serverSideEncryption(ServerSideEncryption.AWS_KMS)
+                .ssekmsKeyId(kmsKeyId)
                 .build();
 
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(r -> r
