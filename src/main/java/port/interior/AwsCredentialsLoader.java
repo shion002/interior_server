@@ -16,12 +16,17 @@ public class AwsCredentialsLoader {
             File file = new File("/etc/secrets/aws-credentials.env");
             if (!file.exists()) {
                 System.out.println("AWS credentials file not found, skipping loading.");
-                return; // 파일이 없으면 로딩을 건너뜀 (앱이 크래시되지 않음)
+                return;
             }
 
             Properties props = new Properties();
             props.load(new FileInputStream(file));
-            props.forEach((key, value) -> System.setProperty(key.toString(), value.toString()));
+            props.forEach((key, value) -> {
+                String envKey = key.toString();
+                String envValue = value.toString();
+                System.setProperty(envKey, envValue);
+                System.out.println("Loaded env: " + envKey + " = " + envValue);
+            });
 
             System.out.println("AWS credentials loaded successfully.");
         } catch (IOException e) {
