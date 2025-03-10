@@ -54,6 +54,9 @@ public class S3Service {
 
         String contentType = determineContentType(fileName);
 
+        log.info("AccessKey = {}", accessKey);
+        log.info("secretKey = {}", secretKey);
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
