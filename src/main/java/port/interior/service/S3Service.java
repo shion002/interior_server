@@ -43,7 +43,7 @@ public class S3Service {
         return S3Presigner.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
-                .endpointOverride(URI.create("https://s3." + region + ".amazonaws.com"))
+                .endpointOverride(URI.create("https://s3." + bucketName + "." + region + ".amazonaws.com"))
                 .build();
     }
 

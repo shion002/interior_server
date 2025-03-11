@@ -115,6 +115,7 @@ public class NoticeController {
         return ResponseEntity.ok().build();
     }
 
+
     @PostMapping("/posting/presigned-url")
     public ResponseEntity<Map<String, String>> getPresignedUrl(@RequestBody PresignedUrlRequestDto requestDto){
         log.info("postId:{}, fileName:{}", requestDto.getPostId(), requestDto.getFileName());
