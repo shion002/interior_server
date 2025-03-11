@@ -144,9 +144,7 @@ public class NoticeController {
 
     @GetMapping("/get/notice")
     public List<NoticeResponseDto> getNoticeAll(){
-        adminService.deleteAdmin();
-        adminService.save();
-        log.info("계정 생성 완료");
+        noticeService.clear();
         return noticeService.findAll();
     }
 }
