@@ -14,9 +14,10 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                                "https://port1-oay92jkja-minhyeoks-projects-b03291c1.vercel.app",
                                 "https://port1-neon-eight.vercel.app",
-                                "https://interior-docker.onrender.com"  // Render 도메인 추가
+                                "https://interior-docker.onrender.com",  // Render 도메인 추가
+                                "http://localhost:5174/",
+                                "http://localhost:5173/"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
