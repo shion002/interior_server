@@ -8,6 +8,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -15,7 +17,6 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -23,7 +24,12 @@ public class JwtService {
 
     @PostConstruct
     public void init() {
-        byte[] decodedKey = Base64.getDecoder().decode(secretKey);
+        byte[] decodedKey;
+        try {
+            decodedKey = Base64.getDecoder().decode(secretKey);
+        } catch (IllegalArgumentException e) {
+            decodedKey = secretKey.getBytes(StandardCharsets.UTF_8);
+        }
         this.signKey = Keys.hmacShaKeyFor(decodedKey);
     }
 
