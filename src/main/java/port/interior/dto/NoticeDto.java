@@ -18,10 +18,12 @@ public class NoticeDto {
     private String title;
     private String content;
     private List<ImageDto> images;
+    private String createDate;
+    private String updateDate;
     private Long adminId;
 
     public Notice toEntity(Admin admin){
-        Notice notice = new Notice(id, title, content, new ArrayList<>(), admin);
+        Notice notice = new Notice(id, title, content, new ArrayList<>(), createDate, updateDate, admin);
 
         log.info("NoticeDto.toEntity() 호출됨! 이미지 개수: {}", (images != null ? images.size() : 0));
 
@@ -35,19 +37,22 @@ public class NoticeDto {
         return notice;
     }
 
-    public NoticeDto(Long id, String title, String content, List<ImageDto> images, Long adminId) {
+    public NoticeDto(Long id, String title, String content, List<ImageDto> images, String createDate, String updateDate, Long adminId) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.images = images;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
         this.adminId = adminId;
     }
+
 
     public static NoticeDto fromEntity(Notice notice){
         List<ImageDto> imageDtos = notice.getImage().stream()
                 .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
                 .toList();
 
-        return new NoticeDto(notice.getId(), notice.getTitle(), notice.getContent(), imageDtos, notice.getAdmin().getId());
+        return new NoticeDto(notice.getId(), notice.getTitle(), notice.getContent(), imageDtos, notice.getCreateDate(), notice.getUpdateDate(), notice.getAdmin().getId());
     }
 }

@@ -14,4 +14,6 @@ public class NoticeResponseDto {
     private String title;
     private List<ImageDto> images;
     private String content;
+    private String createDate;
+    private String updateDate;
 }

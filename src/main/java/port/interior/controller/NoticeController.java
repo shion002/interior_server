@@ -53,7 +53,10 @@ public class NoticeController {
                 notice.getImage().stream()
                         .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
                         .collect(Collectors.toList()),
-                notice.getContent()
+                notice.getContent(),
+                notice.getCreateDate(),
+                notice.getUpdateDate()
+
         );
         return ResponseEntity.ok(responseDto);
     }
@@ -145,6 +148,8 @@ public class NoticeController {
 
     @GetMapping("/get/notice")
     public List<NoticeResponseDto> getNoticeAll(){
+        noticeService.clear();
+        log.info("공지 초기화");
         return noticeService.findAll();
     }
 }

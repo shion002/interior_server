@@ -23,15 +23,23 @@ public class Notice {
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
     private List<Image> image = new ArrayList<>();
 
+    private String createDate;
+
+
+    private String updateDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
-    public Notice(Long id, String title, String content, List<Image> image, Admin admin) {
+
+    public Notice(Long id, String title, String content, List<Image> image, String createDate, String updateDate, Admin admin) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.image = image;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
         this.admin = admin;
     }
 }

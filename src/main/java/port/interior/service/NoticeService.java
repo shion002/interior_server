@@ -110,9 +110,11 @@ public class NoticeService {
                         notice.getImage().stream()
                                 .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
                                 .collect(Collectors.toList()),
-                        notice.getContent()
+                        notice.getContent(),
+                        notice.getCreateDate(),
+                        notice.getUpdateDate()
                 )
-                ).collect(Collectors.toList());
+        ).collect(Collectors.toList());
     }
 
     public Notice findById(Long postId) {
