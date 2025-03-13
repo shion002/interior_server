@@ -148,8 +148,6 @@ public class NoticeController {
 
     @GetMapping("/get/notice")
     public List<NoticeResponseDto> getNoticeAll(){
-        noticeService.clear();
-        log.info("공지 초기화");
         return noticeService.findAll();
     }
 }
