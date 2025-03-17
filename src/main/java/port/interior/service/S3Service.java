@@ -54,9 +54,6 @@ public class S3Service {
 
         String contentType = determineContentType(fileName);
 
-        log.info("AccessKey = {}", accessKey);
-        log.info("secretKey = {}", secretKey);
-
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
@@ -69,11 +66,9 @@ public class S3Service {
                 .putObjectRequest(putObjectRequest)
         );
 
-        log.info("Canonical Request: {}", presignedRequest.toBuilder().toString());
-
         String presignedUrl = presignedRequest.url().toString();
-
         log.info("Generated presigned URL: {}", presignedUrl);
+
         return presignedUrl;
     }
 

@@ -54,6 +54,7 @@ public class NoticeService {
 
         notice.setTitle(noticeDto.getTitle());
         notice.setContent(noticeDto.getContent());
+        notice.setUpdateDate(noticeDto.getUpdateDate());
 
         updateNoticeImages(notice, noticeDto.getImages());
 
