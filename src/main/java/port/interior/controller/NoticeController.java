@@ -151,6 +151,7 @@ public class NoticeController {
 
     @GetMapping("/get/notice")
     public List<NoticeResponseDto> getNoticeAll(@RequestParam String sortBy){
+        log.info("sortBy값 ={}", sortBy);
         return noticeService.findAll(sortBy);
     }
 }
