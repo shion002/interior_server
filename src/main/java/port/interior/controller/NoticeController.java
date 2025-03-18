@@ -17,6 +17,7 @@ import port.interior.service.AdminService;
 import port.interior.service.NoticeService;
 import port.interior.service.S3Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,6 +48,8 @@ public class NoticeController {
     @GetMapping("/posting/{postId}")
     public ResponseEntity<NoticeResponseDto> getNoticeById(@PathVariable Long postId) {
         Notice notice = noticeService.findById(postId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         NoticeResponseDto responseDto = new NoticeResponseDto(
                 notice.getId(),
                 notice.getTitle(),
@@ -54,8 +57,8 @@ public class NoticeController {
                         .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
                         .collect(Collectors.toList()),
                 notice.getContent(),
-                notice.getCreateDate(),
-                notice.getUpdateDate()
+                notice.getCreateDate().format(formatter),
+                notice.getUpdateDate().format(formatter)
 
         );
         return ResponseEntity.ok(responseDto);
