@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,17 +24,15 @@ public class Notice {
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
     private List<Image> image = new ArrayList<>();
 
-    private String createDate;
-
-
-    private String updateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
 
-    public Notice(Long id, String title, String content, List<Image> image, String createDate, String updateDate, Admin admin) {
+    public Notice(Long id, String title, String content, List<Image> image, LocalDateTime createDate, LocalDateTime updateDate, Admin admin) {
         this.id = id;
         this.title = title;
         this.content = content;

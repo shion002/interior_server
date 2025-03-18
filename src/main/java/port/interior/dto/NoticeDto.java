@@ -7,6 +7,7 @@ import port.interior.entity.Admin;
 import port.interior.entity.Image;
 import port.interior.entity.Notice;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class NoticeDto {
     private String title;
     private String content;
     private List<ImageDto> images;
-    private String createDate;
-    private String updateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
     private Long adminId;
 
     public Notice toEntity(Admin admin){
@@ -37,7 +38,7 @@ public class NoticeDto {
         return notice;
     }
 
-    public NoticeDto(Long id, String title, String content, List<ImageDto> images, String createDate, String updateDate, Long adminId) {
+    public NoticeDto(Long id, String title, String content, List<ImageDto> images, LocalDateTime createDate, LocalDateTime updateDate, Long adminId) {
         this.id = id;
         this.title = title;
         this.content = content;

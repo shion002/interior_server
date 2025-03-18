@@ -14,6 +14,8 @@ import port.interior.repository.AdminRepository;
 import port.interior.repository.ImageRepository;
 import port.interior.repository.NoticeRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class NoticeService {
     public NoticeDto upload(NoticeDto noticeDto){
         Admin admin = adminRepository.findById(noticeDto.getAdminId())
                 .orElseThrow(() -> new IllegalArgumentException("관리자가 존재하지 않습니다"));
+        noticeDto.setCreateDate(LocalDateTime.now());
         log.info("noticeDto={}",noticeDto);
         Notice notice = noticeDto.toEntity(admin);
         Notice saveNotice = noticeRepository.save(notice);
@@ -54,7 +57,7 @@ public class NoticeService {
 
         notice.setTitle(noticeDto.getTitle());
         notice.setContent(noticeDto.getContent());
-        notice.setUpdateDate(noticeDto.getUpdateDate());
+        notice.setUpdateDate(LocalDateTime.now());
 
         updateNoticeImages(notice, noticeDto.getImages());
 
@@ -103,6 +106,7 @@ public class NoticeService {
     public List<NoticeResponseDto> findAll(){
 
         List<Notice> notices = noticeRepository.findAllWithImages();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return notices.stream().map(notice ->
                 new NoticeResponseDto(
@@ -112,8 +116,8 @@ public class NoticeService {
                                 .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
                                 .collect(Collectors.toList()),
                         notice.getContent(),
-                        notice.getCreateDate(),
-                        notice.getUpdateDate()
+                        notice.getCreateDate().format(formatter),
+                        notice.getUpdateDate().format(formatter)
                 )
         ).collect(Collectors.toList());
     }
