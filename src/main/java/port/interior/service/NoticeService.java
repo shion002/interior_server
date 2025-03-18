@@ -17,6 +17,7 @@ import port.interior.repository.NoticeRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -104,23 +105,26 @@ public class NoticeService {
         noticeRepository.save(notice); // 변경 사항 저장
     }
 
-    public List<NoticeResponseDto> findAll(){
+    public List<NoticeResponseDto> findAll(String sortBy){
 
-        List<Notice> notices = noticeRepository.findAllWithImages();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        return notices.stream().map(notice ->
-                new NoticeResponseDto(
-                        notice.getId(),
-                        notice.getTitle(),
-                        notice.getImage().stream()
-                                .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
-                                .collect(Collectors.toList()),
-                        notice.getContent(),
-                        notice.getCreateDate().format(formatter),
-                        notice.getUpdateDate().format(formatter)
-                )
+        return noticeRepository.findAllWithImagesSorted(sortBy).stream().map(notice ->
+                getNoticeResponseDto(notice, formatter)
         ).collect(Collectors.toList());
+    }
+
+    private static NoticeResponseDto getNoticeResponseDto(Notice notice, DateTimeFormatter formatter) {
+        return new NoticeResponseDto(
+                notice.getId(),
+                notice.getTitle(),
+                notice.getImage().stream()
+                        .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
+                        .collect(Collectors.toList()),
+                notice.getContent(),
+                notice.getCreateDate().format(formatter),
+                notice.getUpdateDate().format(formatter)
+        );
     }
 
     public Notice findById(Long postId) {

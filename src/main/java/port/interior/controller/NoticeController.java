@@ -150,8 +150,8 @@ public class NoticeController {
     }
 
     @GetMapping("/get/notice")
-    public List<NoticeResponseDto> getNoticeAll(){
-        return noticeService.findAll();
+    public List<NoticeResponseDto> getNoticeAll(@RequestParam String sortBy){
+        return noticeService.findAll(sortBy);
     }
 }
 

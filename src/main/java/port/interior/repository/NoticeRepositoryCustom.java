@@ -8,4 +8,6 @@ public interface NoticeRepositoryCustom {
     List<Notice> findAllWithImages();
 
     List<String> getImageUrlsByPostId(Long postId);
+
+    List<Notice> findAllWithImagesSorted(String sortBy);
 }

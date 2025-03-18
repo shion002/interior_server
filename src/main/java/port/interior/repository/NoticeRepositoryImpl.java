@@ -35,4 +35,16 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
                 .where(image.notice.id.eq(postId))
                 .fetch();
     }
+
+    @Override
+    public List<Notice> findAllWithImagesSorted(String sortBy) {
+        return queryFactory
+                .selectFrom(notice)
+                .leftJoin(notice.image, image).fetchJoin()
+                .orderBy(sortBy.equals("오래된순") ? notice.createDate.asc() :
+                        sortBy.equals("이름순") ? notice.title.asc() :
+                        notice.createDate.desc()
+                )
+                .fetch();
+    }
 }
