@@ -34,6 +34,7 @@ public class NoticeService {
         Admin admin = adminRepository.findById(noticeDto.getAdminId())
                 .orElseThrow(() -> new IllegalArgumentException("관리자가 존재하지 않습니다"));
         noticeDto.setCreateDate(LocalDateTime.now());
+        noticeDto.setUpdateDate(LocalDateTime.now());
         log.info("noticeDto={}",noticeDto);
         Notice notice = noticeDto.toEntity(admin);
         Notice saveNotice = noticeRepository.save(notice);
