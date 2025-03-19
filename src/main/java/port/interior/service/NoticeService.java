@@ -17,7 +17,6 @@ import port.interior.repository.NoticeRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,9 +56,7 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다: " + postId));
 
-        notice.setTitle(noticeDto.getTitle());
-        notice.setContent(noticeDto.getContent());
-        notice.setUpdateDate(LocalDateTime.now());
+        notice.updateNoticeDate(noticeDto.getTitle(), notice.getContent());
 
         updateNoticeImages(notice, noticeDto.getImages());
 
@@ -96,13 +93,13 @@ public class NoticeService {
         log.info("기존 이미지 개수: {}", notice.getImage().size());
 
         List<Image> images = imageDtos.stream()
-                .map(dto -> new Image(dto.getName(), dto.getImageUrl(),dto.getSize(), notice)) // 연관관계 설정
+                .map(dto -> new Image(dto.getName(), dto.getImageUrl(),dto.getSize(), notice))
                 .toList();
 
         notice.getImage().clear();
-        notice.getImage().addAll(images); // 이미지 리스트 추가
+        notice.getImage().addAll(images);
 
-        noticeRepository.save(notice); // 변경 사항 저장
+        noticeRepository.save(notice);
     }
 
     public List<NoticeResponseDto> findAll(String sortBy){
@@ -127,9 +124,12 @@ public class NoticeService {
         );
     }
 
-    public Notice findById(Long postId) {
-        return noticeRepository.findById(postId)
+    public NoticeResponseDto findById(Long postId) {
+        Notice notice = noticeRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다: " + postId));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        return getNoticeResponseDto(notice, formatter);
     }
 
     public void deleteImages(Long postId, List<String> imageUrls) {

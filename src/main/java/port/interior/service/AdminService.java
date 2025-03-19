@@ -2,6 +2,7 @@ package port.interior.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import port.interior.dto.AdminResponseDto;
 import port.interior.entity.Admin;
 import port.interior.repository.AdminRepository;
 import port.interior.util.SecurityUtil;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.util.List;
 
@@ -22,6 +22,12 @@ import java.util.List;
 public class AdminService {
     private final AdminRepository adminRepository;
 
+    @Value("${admin.id}")
+    private String adminId;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
     public AdminResponseDto login(LoginDto loginDto){
         return adminRepository.findByUsername(loginDto.getUsername())
                 .filter(admin -> admin.getPassword().equals(loginDto.getPassword()))
@@ -30,7 +36,7 @@ public class AdminService {
     }
 
     public void save(){
-        Admin admin = new Admin("admin", "admin123");
+        Admin admin = new Admin(adminId, adminPassword);
         adminRepository.save(admin);
     }
 

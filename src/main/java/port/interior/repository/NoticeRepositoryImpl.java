@@ -1,11 +1,10 @@
 package port.interior.repository;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import port.interior.entity.Notice;
-import port.interior.entity.QImage;
-import port.interior.entity.QNotice;
 
 import java.util.List;
 
@@ -38,13 +37,20 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
 
     @Override
     public List<Notice> findAllWithImagesSorted(String sortBy) {
+        NoticeSort noticeSort = NoticeSort.fromString(sortBy);
+
         return queryFactory
                 .selectFrom(notice)
                 .leftJoin(notice.image, image).fetchJoin()
-                .orderBy(sortBy.equals("오래된순") ? notice.createDate.asc() :
-                        sortBy.equals("이름순") ? notice.title.asc() :
-                        notice.createDate.desc()
-                )
+                .orderBy(getSortOrder(noticeSort))
                 .fetch();
+    }
+
+    private static OrderSpecifier<?> getSortOrder(NoticeSort noticeSort) {
+        return switch (noticeSort) {
+            case OLDEST -> notice.createDate.asc();
+            case NAME -> notice.title.asc();
+            default -> notice.createDate.desc();
+        };
     }
 }

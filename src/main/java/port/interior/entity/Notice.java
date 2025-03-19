@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "NOTICE")
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 public class Notice {
 
@@ -40,5 +40,11 @@ public class Notice {
         this.createDate = createDate;
         this.updateDate = updateDate;
         this.admin = admin;
+    }
+
+    public void updateNoticeDate(String titleDto, String contentDto){
+        this.title = titleDto;
+        this.content = contentDto;
+        this.updateDate = LocalDateTime.now();
     }
 }

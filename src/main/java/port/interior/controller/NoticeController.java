@@ -47,20 +47,7 @@ public class NoticeController {
 
     @GetMapping("/posting/{postId}")
     public ResponseEntity<NoticeResponseDto> getNoticeById(@PathVariable Long postId) {
-        Notice notice = noticeService.findById(postId);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        NoticeResponseDto responseDto = new NoticeResponseDto(
-                notice.getId(),
-                notice.getTitle(),
-                notice.getImage().stream()
-                        .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
-                        .collect(Collectors.toList()),
-                notice.getContent(),
-                notice.getCreateDate().format(formatter),
-                notice.getUpdateDate().format(formatter)
-
-        );
+        NoticeResponseDto responseDto = noticeService.findById(postId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -83,9 +70,7 @@ public class NoticeController {
             for (String imageUrl : imageUrls) {
                 s3Service.deleteFile(imageUrl);
             }
-
             noticeService.deleteImages(postId, imageUrls);
-
             noticeService.deleteNotice(postId);
 
             return ResponseEntity.ok().body("게시물이 삭제되었습니다.");
