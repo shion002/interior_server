@@ -2,6 +2,9 @@ package port.interior.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import port.interior.dto.ImageDto;
@@ -154,5 +157,10 @@ public class NoticeService {
 
     public List<String> getImageUrlsByPostId(Long postId) {
         return noticeRepository.getImageUrlsByPostId(postId);
+    }
+
+    public Page<Notice> getPageNotice(int page, int size){
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+        return noticeRepository.findAll(pageable);
     }
 }
