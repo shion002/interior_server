@@ -1,10 +1,8 @@
 package port.interior.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import port.interior.dto.ImageDto;
@@ -12,16 +10,13 @@ import port.interior.dto.NoticeDto;
 import port.interior.dto.NoticeResponseDto;
 import port.interior.dto.PresignedUrlRequestDto;
 import port.interior.entity.Admin;
-import port.interior.entity.Image;
 import port.interior.entity.Notice;
 import port.interior.service.AdminService;
 import port.interior.service.NoticeService;
 import port.interior.service.S3Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -142,9 +137,11 @@ public class NoticeController {
     }
 
     @GetMapping("/get/pageable/notice")
-    public Page<Notice> getPageNotice(@RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "3") int size){
-        return noticeService.getPageNotice(page, size);
+    public ResponseEntity<Page<NoticeResponseDto>> getPageNotice(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "3") int size){
+        Page<Notice> notices = noticeService.getPageNotice(page, size);
+        Page<NoticeResponseDto> responseDtoPage = notices.map(NoticeResponseDto::new);
+        return ResponseEntity.ok(responseDtoPage);
     }
 }
 
