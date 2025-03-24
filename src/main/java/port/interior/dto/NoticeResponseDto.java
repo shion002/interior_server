@@ -30,7 +30,7 @@ public class NoticeResponseDto {
         this.updateDate = notice.getUpdateDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         this.images = notice.getImage() != null
-                ? notice.getImage().stream().map(ImageDto::new).collect(Collectors.toList())
-                : new ArrayList<>();
+                ? notice.getImage().stream().map(image -> new ImageDto(image.getImageUrl()))
+                .collect(Collectors.toList()) : new ArrayList<>();
     }
 }

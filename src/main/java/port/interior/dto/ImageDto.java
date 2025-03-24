@@ -9,22 +9,13 @@ import port.interior.entity.Image;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImageDto {
-    private Long id;
     private String name;
     private String imageUrl;
     private int size;
 
-    public ImageDto(Long id, String imageUrl) {
-        this.id = id;
+
+    public ImageDto(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    public ImageDto(String name, String imageUrl, int size) {
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.size = size;
-    }
-
-    public ImageDto(Image image) {
-    }
 }
