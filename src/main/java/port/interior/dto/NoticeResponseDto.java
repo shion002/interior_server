@@ -7,7 +7,9 @@ import port.interior.entity.Notice;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -26,5 +28,9 @@ public class NoticeResponseDto {
         this.content = notice.getContent();
         this.createDate = notice.getCreateDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         this.updateDate = notice.getUpdateDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        this.images = notice.getImage() != null
+                ? notice.getImage().stream().map(ImageDto::new).collect(Collectors.toList())
+                : new ArrayList<>();
     }
 }

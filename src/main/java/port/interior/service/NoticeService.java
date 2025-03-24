@@ -161,6 +161,11 @@ public class NoticeService {
 
     public Page<Notice> getPageNotice(int page, int size){
         PageRequest pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
-        return noticeRepository.findAll(pageable);
+        Page<Notice> notices = noticeRepository.findAll(pageable); // 기본 페이징 처리
+
+        // Lazy Loading으로 인해 images 조회 시 N+1 발생 가능 → Batch Fetching 사용 추천
+        notices.getContent().forEach(notice -> notice.getImage().size());
+
+        return notices;
     }
 }
