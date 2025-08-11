@@ -19,14 +19,20 @@ public class Image {
     private String imageUrl;
     private int size;
 
+    @Setter
+    @Column(name = "order_index")
+    private int orderIndex;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_id")
     private Notice notice;
 
-    public Image(String fileName, String imageUrl, int fileSize, Notice notice) {
-        this.name = fileName;
+    public Image(String name, String imageUrl, int size, int orderIndex, Notice notice) {
+        this.name = name;
         this.imageUrl = imageUrl;
-        this.size = fileSize;
+        this.size = size;
+        this.orderIndex = orderIndex;
         this.notice = notice;
     }
+
 }

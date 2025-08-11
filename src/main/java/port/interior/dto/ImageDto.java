@@ -12,6 +12,7 @@ public class ImageDto {
     private String name;
     private String imageUrl;
     private int size;
+    private int orderIndex;
 
 
     public ImageDto(String imageUrl) {

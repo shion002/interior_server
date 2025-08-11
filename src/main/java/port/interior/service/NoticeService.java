@@ -55,37 +55,49 @@ public class NoticeService {
         noticeRepository.deleteAll();
     }
 
-    public NoticeDto updateNotice(Long postId, NoticeDto noticeDto){
+    public void updateNotice(Long postId, NoticeDto noticeDto){
         Notice notice = noticeRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다: " + postId));
 
-        notice.updateNoticeDate(noticeDto.getTitle(), notice.getContent());
+        notice.updateNoticeDate(noticeDto.getTitle(), noticeDto.getContent());
 
         updateNoticeImages(notice, noticeDto.getImages());
 
         Notice updatedNotice = noticeRepository.save(notice);
-        return NoticeDto.fromEntity(updatedNotice);
+        NoticeDto.fromEntity(updatedNotice);
     }
 
     private void updateNoticeImages(Notice notice, List<ImageDto> newImageDtos) {
-        List<Image> existingImages = new ArrayList<>(notice.getImage()); // 기존 이미지
-        List<String> newImageUrls = newImageDtos.stream().map(ImageDto::getImageUrl).toList();
+        List<Image> existingImages = new ArrayList<>(notice.getImage());
 
-        List<Image> imagesToRemove = existingImages.stream()
-                .filter(image -> !newImageUrls.contains(image.getImageUrl()))
+        // 1. 삭제할 이미지 찾기
+        List<Image> toRemove = existingImages.stream()
+                .filter(img -> newImageDtos.stream()
+                        .noneMatch(dto -> dto.getImageUrl().equals(img.getImageUrl())))
                 .toList();
 
-        for (Image image : imagesToRemove) {
-            s3Service.deleteFile(image.getImageUrl());
-            notice.getImage().remove(image);
+        toRemove.forEach(img -> {
+            s3Service.deleteFile(img.getImageUrl());
+            notice.getImage().remove(img);
+        });
+
+        // 2. 추가할 이미지 찾기
+        for (int i = 0; i < newImageDtos.size(); i++) {
+            ImageDto dto = newImageDtos.get(i);
+
+            Image existing = notice.getImage().stream()
+                    .filter(img -> img.getImageUrl().equals(dto.getImageUrl()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existing == null) {
+                Image newImg = new Image(dto.getName(), dto.getImageUrl(), dto.getSize(), i, notice);
+                notice.getImage().add(newImg);
+            } else {
+                // 순서 갱신
+                existing.setOrderIndex(i);
+            }
         }
-
-        List<Image> imagesToAdd = newImageDtos.stream()
-                .filter(dto -> existingImages.stream().noneMatch(img -> img.getImageUrl().equals(dto.getImageUrl())))
-                .map(dto -> new Image(dto.getName(), dto.getImageUrl(), dto.getSize(), notice))
-                .toList();
-
-        notice.getImage().addAll(imagesToAdd);
     }
 
     public void uploadNoticeImages(Long postId, List<ImageDto> imageDtos) {
@@ -96,7 +108,7 @@ public class NoticeService {
         log.info("기존 이미지 개수: {}", notice.getImage().size());
 
         List<Image> images = imageDtos.stream()
-                .map(dto -> new Image(dto.getName(), dto.getImageUrl(),dto.getSize(), notice))
+                .map(dto -> new Image(dto.getName(), dto.getImageUrl(),dto.getSize(), dto.getOrderIndex() ,notice))
                 .toList();
 
         notice.getImage().clear();
@@ -119,7 +131,7 @@ public class NoticeService {
                 notice.getId(),
                 notice.getTitle(),
                 notice.getImage().stream()
-                        .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
+                        .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize(), image.getOrderIndex()))
                         .collect(Collectors.toList()),
                 notice.getContent(),
                 notice.getCreateDate().format(formatter),

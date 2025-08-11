@@ -9,6 +9,7 @@ import port.interior.entity.Notice;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -30,9 +31,15 @@ public class NoticeDto {
 
         if (images != null && !images.isEmpty()) {
             for (ImageDto imgDto : images) {
-                Image image = new Image(imgDto.getName(), imgDto.getImageUrl(), imgDto.getSize(), notice);
+                Image image = new Image(
+                        imgDto.getName(),
+                        imgDto.getImageUrl(),
+                        imgDto.getSize(),
+                        imgDto.getOrderIndex(),
+                        notice
+                );
+                image.setOrderIndex(imgDto.getOrderIndex()); // 순서 반영
                 notice.getImage().add(image);
-                log.info("img={}", image.getImageUrl());
             }
         }
         return notice;
@@ -51,7 +58,8 @@ public class NoticeDto {
 
     public static NoticeDto fromEntity(Notice notice){
         List<ImageDto> imageDtos = notice.getImage().stream()
-                .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize()))
+                .sorted(Comparator.comparingInt(Image::getOrderIndex)) // 순서 정렬 강제
+                .map(image -> new ImageDto(image.getName(), image.getImageUrl(), image.getSize(), image.getOrderIndex()))
                 .toList();
 
         return new NoticeDto(notice.getId(), notice.getTitle(), notice.getContent(), imageDtos, notice.getCreateDate(), notice.getUpdateDate(), notice.getAdmin().getId());

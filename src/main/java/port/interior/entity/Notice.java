@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.core.annotation.Order;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ public class Notice {
     private String title;
     private String content;
 
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orderIndex ASC")
     private List<Image> image = new ArrayList<>();
 
     private LocalDateTime createDate;

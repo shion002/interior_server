@@ -50,7 +50,7 @@ public class NoticeController {
     @PutMapping("/posting/{postId}/update")
     public ResponseEntity<NoticeDto> updateNotice(@PathVariable Long postId,
                                                   @RequestBody NoticeDto noticeDto){
-        NoticeDto updateNotice = noticeService.updateNotice(postId, noticeDto);
+        noticeService.updateNotice(postId, noticeDto);
         return ResponseEntity.ok(noticeDto);
     }
 
