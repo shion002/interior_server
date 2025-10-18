@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import port.interior.dto.LoginDto;
@@ -29,10 +30,13 @@ public class AdminService {
     private String adminPassword;
 
     public AdminResponseDto login(LoginDto loginDto){
-        return adminRepository.findByUsername(loginDto.getUsername())
-                .filter(admin -> admin.getPassword().equals(loginDto.getPassword()))
-                .map(admin -> new AdminResponseDto(admin.getId(), admin.getUsername()))
-                .orElse(null);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        Admin admin = adminRepository.findByUsername(loginDto.getUsername()).orElse(null);
+        if(admin != null && encoder.matches(loginDto.getPassword(), admin.getPassword())) {
+            return new AdminResponseDto(admin.getId(), admin.getUsername());
+        }
+        return null;
     }
 
     public void save(){
