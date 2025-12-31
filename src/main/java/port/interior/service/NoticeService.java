@@ -70,7 +70,6 @@ public class NoticeService {
     private void updateNoticeImages(Notice notice, List<ImageDto> newImageDtos) {
         List<Image> existingImages = new ArrayList<>(notice.getImage());
 
-        // 1. 삭제할 이미지 찾기
         List<Image> toRemove = existingImages.stream()
                 .filter(img -> newImageDtos.stream()
                         .noneMatch(dto -> dto.getImageUrl().equals(img.getImageUrl())))
@@ -81,7 +80,6 @@ public class NoticeService {
             notice.getImage().remove(img);
         });
 
-        // 2. 추가할 이미지 찾기
         for (int i = 0; i < newImageDtos.size(); i++) {
             ImageDto dto = newImageDtos.get(i);
 
@@ -173,9 +171,8 @@ public class NoticeService {
 
     public Page<Notice> getPageNotice(int page, int size){
         PageRequest pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
-        Page<Notice> notices = noticeRepository.findAll(pageable); // 기본 페이징 처리
+        Page<Notice> notices = noticeRepository.findAll(pageable);
 
-        // Lazy Loading으로 인해 images 조회 시 N+1 발생 가능 → Batch Fetching 사용 추천
         notices.getContent().forEach(notice -> notice.getImage().size());
 
         return notices;

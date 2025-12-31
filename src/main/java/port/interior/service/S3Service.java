@@ -83,7 +83,7 @@ public class S3Service {
         } else if (fileName.endsWith(".pdf")) {
             return "application/pdf";
         } else {
-            return "application/octet-stream"; // Default binary type
+            return "application/octet-stream";
         }
     }
 

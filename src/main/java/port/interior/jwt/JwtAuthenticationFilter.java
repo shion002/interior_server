@@ -30,13 +30,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authorizationHeader = request.getHeader("Authorization");
 
-        // null 체크 추가
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Bearer 제거 후 토큰 추출
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUsername(token);
 

@@ -27,7 +27,7 @@ public class NoticeDto {
     public Notice toEntity(Admin admin){
         Notice notice = new Notice(id, title, content, new ArrayList<>(), createDate, updateDate, admin);
 
-        log.info("NoticeDto.toEntity() 호출됨! 이미지 개수: {}", (images != null ? images.size() : 0));
+        log.info("NoticeDto.toEntity() 호출 이미지 개수: {}", (images != null ? images.size() : 0));
 
         if (images != null && !images.isEmpty()) {
             for (ImageDto imgDto : images) {

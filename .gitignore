@@ -38,3 +38,6 @@ out/
 
 # React 환경 변수
 .env
+
+### test ###
+/src/test
