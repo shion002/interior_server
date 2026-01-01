@@ -6,7 +6,7 @@
 - <b>소개</b> : 인테리어 소개 및 게시물 생성 업데이트 프로젝트
 - <b>Frontend Skill</b> : React, JavaScript
 - <b>Backend Skill</b> : Spring boot JPA, PostgreSQL, Nginx
-- <b>백엔드 Repository</b> : https://github.com/shion002/interior_server
+- <b>프론트 Repository</b> : https://github.com/shion002/interior
 
 
 <br/>
